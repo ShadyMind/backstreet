@@ -1,0 +1,24 @@
+---
+version: "3.9"
+
+services:
+  pack-manager-app:
+    container_name: pack-manager-app
+    # profile: pack-manager
+    image: denoland/deno:alpine-1.14.0
+    env_file: ['./.env']
+    volumes:
+      - ./ecosystem/pack-manager-app:/usr/share/app
+    entrypoint: /bin/deno run /usr/share/app/main.ts
+    depends_on: ['pack-manager-db']
+    # healthcheck: ['curl', '-f', 'https://localhost/health']
+
+  pack-manager-db:
+    container_name: pack-manager-db
+    # profile: pack-manager
+    image: mongo:4.0
+
+  service-mq:
+    container_name: service-mq
+    # profile: service
+    image: redis:alpine3.14
